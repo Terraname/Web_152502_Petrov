@@ -1,0 +1,93 @@
+﻿@model Web_152502_Petrov.Domain.Models.ListModel<Web_152502_Petrov.Domain.Entities.Drug>
+
+@{
+    ViewData["Title"] = "View";
+
+    var request = ViewContext.HttpContext.Request;
+    var returnUrl = request.Path + request.QueryString.ToUriComponent();
+    // asp-route-id="@item.Id" asp-route-returnUrl=@Model.ReturnUrl
+
+
+    //var a = new Web_152502_Petrov.Services.CathegoryService.MemoryCathegoryService();
+
+    //var productResponse =
+    //        await a.GetCathegoryListAsync();
+    //if (!productResponse.Success)
+    //    return;
+    //var Cathegories = productResponse.Data;
+    //Cathegory[] cathegories = { 
+    //            new Cathegory {Id=1, Name="Антибиотики",
+    //            NormalizedName="antibiotics"},
+    //            new Cathegory {Id=2, Name="ПротивоАлиргенные",
+    //            NormalizedName="anti-alergy"},
+
+    //        };
+    var page = Model;
+    var items = page.Items;
+    int count = items.Count();
+    int i = 0;
+    //Cathegory cathegory = ViewData["currentCathegory"];
+    int prev = Model.CurrentPage == 1 ? 1 : Model.CurrentPage - 1;
+    int next =( Model.CurrentPage == Model.TotalPages) ? Model.TotalPages : Model.CurrentPage + 1;
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Dropdown button
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li>
+            <a class="dropdown-item"
+               asp-controller="Drug"
+               asp-route-cathegory=@null>Все</a>
+        </li>
+        @foreach(var item in ViewBag.Cathegories)
+        {
+            <li>
+               <a class="dropdown-item" 
+               asp-controller="Drug"
+               asp-route-cathegory=@item.NormalizedName>
+                   @item.Name
+               </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="col-2 border-2">
+    <ul class="nav">
+        <li class="nav-item dropdown">
+            <a class="nav-item dropdown"
+            data-bs-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-expanded="false">@ViewData["currentCathegory"]
+            </a>
+        </li>
+    </ul>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item"
+            asp-controller="Drug"
+            asp-route-cathegory="@null">Все</a>
+        </li>
+    </ul>
+</div>
+
+@{
+    await Html.RenderPartialAsync("Partial/_DrugListPartial", new
+    {
+        Drugs = Model.Items,
+        Cathegory = @ViewData["currentCathegory"],
+        CurrentPage = Model.CurrentPage,
+        TotalPages = Model.TotalPages,
+        ReturnUrl = returnUrl,
+        IsAdmin = false
+    });
+}

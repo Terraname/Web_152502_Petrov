@@ -1,0 +1,94 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Index";
+}
+@using Web_152502_Petrov.Models;
+@{
+    var elements = new List<ListDemo>
+    {
+        new ListDemo{ Id=1, Name="first"},
+        new ListDemo{ Id=2, Name="second"},
+    };
+}
+  
+        Содержимое страницы
+        <h1>Лабораторная работа №2</h1>
+        <h2>Список</h2>
+        <ol type="A"> 
+            @for (var i = 0; i < 3; i++)
+            {
+                <li>элемент @i списка</li>
+            }
+        </ol>
+        <hr />
+        <h2>Форма</h2>
+        <form method="post">
+            <fieldset class="row mb-3">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkBox1" id="gridCheck1" />
+                        <label class="form-check-label" for="gridCheck1">
+                            CheckBox-1
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+
+                        <input class="form-check-input" type="checkbox" name="checkBox2" id="gridCheck2" />
+                        <label class="form-check-label" for="gridCheck2">
+                            CheckBox-2
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+
+                        <select id="select1" name="select" asp-items="ViewBag.elements">
+                            @foreach(var element in elements)
+                            {
+                        <option value=@element.Id>@element.Name</option>
+                            }
+                        </select>
+                        <label class="form-check-label" for="select1">
+                            select element
+                        </label>
+                    </div>
+
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadio1" value="option1" />
+                        <label class="form-check-label" for="gridRadio2">
+                            First Radio
+                        </label>
+
+                        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadio2" value="option2" />
+                        <label class="form-check-label" for="gridRadio2">
+                            Second Radio
+                        </label>
+
+                        <input class="form-check-input" type="radio" name="gridRadios" id="gridRadio3" value="option2" />
+                        <label class="form-check-label" for="gridRadio3">
+                            Third Radio
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="row mb-3">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" name="eMail" id="inputEmail3">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" name="password" id="inputPassword3">
+                </div>
+            </div>
+
+            <button type="submit">
+                Send
+            </button>
+        </form>

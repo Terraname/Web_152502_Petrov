@@ -1,0 +1,144 @@
+﻿@model Web_152502_Petrov.Domain.Models.ListModel<Web_152502_Petrov.Domain.Entities.Drug>
+
+@{
+    ViewData["Title"] = "View";
+
+    //var returnUrl = request.Path + request.QueryString.ToUriComponent();
+    // asp-route-id="@item.Id" asp-route-returnUrl=@Model.ReturnUrl
+
+
+    //var a = new Web_152502_Petrov.Services.CathegoryService.MemoryCathegoryService();
+
+    //var productResponse =
+    //        await a.GetCathegoryListAsync();
+    //if (!productResponse.Success)
+    //    return;
+    //var Cathegories = productResponse.Data;
+    //Cathegory[] cathegories = { 
+    //            new Cathegory {Id=1, Name="Антибиотики",
+    //            NormalizedName="antibiotics"},
+    //            new Cathegory {Id=2, Name="ПротивоАлиргенные",
+    //            NormalizedName="anti-alergy"},
+
+    //        };
+    var page = Model;
+    var items = page.Items;
+    int count = items.Count();
+    int i = 0;
+    //Cathegory cathegory = ViewData["currentCathegory"];
+    int prev = Model.CurrentPage == 1 ? 1 : Model.CurrentPage - 1;
+    int next =( Model.CurrentPage == Model.TotalPages) ? Model.TotalPages : Model.CurrentPage + 1;
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Dropdown button
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li>
+            <a class="dropdown-item"
+               asp-controller="Drug"
+               asp-route-cathegory=@null>Все</a>
+        </li>
+        @foreach(var item in ViewBag.Cathegories)
+        {
+            <li>
+               <a class="dropdown-item" 
+               asp-controller="Drug"
+               asp-route-cathegory=@item.NormalizedName>
+                   @item.Name
+               </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="col-2 border-2">
+    <ul class="nav">
+        <li class="nav-item dropdown">
+            <a class="nav-item dropdown"
+            data-bs-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-expanded="false">@ViewData["currentCathegory"]
+            </a>
+        </li>
+    </ul>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item"
+            asp-controller="Drug"
+            asp-route-cathegory="@null">Все</a>
+        </li>
+    </ul>
+</div>
+
+@foreach(var item in items)
+{
+    @if(i % 3 == 0)
+    {
+        @Html.Raw("<div class='card-group'>");
+    }  
+        <div class="card">
+            <img src="..." class="card-img-top" alt="..." />
+            <div class="card-body">
+                <h5 class="card-title">@item.Name</h5>
+                <p class="card-text">@item.Description</p>
+                <label>@item.Price</label>
+            @if (@ViewBag.IsAdmin)
+            {
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            }
+            else
+            {
+                @Html.ActionLink("Добавить в корзину", "Add", new {  id=item.Id  })
+                <a asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id" class="btn btn-primary">Add to cart</a>
+            }
+            </div>
+        </div>
+    @if(i % 3 == 2 || i == count-1)
+    {
+        @Html.Raw("</div>");
+    }
+    i++;
+}
+
+    @if (@ViewBag.IsAdmin)
+    {
+        <pager current-page="@Model.CurrentPage"
+           total-pages="@Model.TotalPages"
+           admin="true">
+        </pager>
+    }
+    else
+    {
+        <pager current-page="@Model.CurrentPage"
+           total-pages="@Model.TotalPages"
+           cathegory=@ViewData["currentCathegory"]>
+        </pager>
+    }
+
+<nav>
+    <ul>
+        <li>
+            <a class="page-link" href=
+            "@Url.Action("Index", "Drug", new {Cathegory=ViewData["currentCathegory"], pageNo= next})">
+            Next Page</a>
+        </li>
+        <li>
+            <a class="page-link" href=
+            "@Url.Action("Index", "Drug", new {Cathegory=ViewData["currentCathegory"], pageNo= prev})">
+            Previous Page</a>
+        </li>
+    </ul>
+</nav>
+
+<label>Page @Model.CurrentPage out of @Model.TotalPages </label>
